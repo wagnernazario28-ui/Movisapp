@@ -9,11 +9,6 @@ const LoadingSpinner = () => (
 );
 
 function DetailsModal({ isVisible, onClose, details, isLoading, baseTitle, onMarkAsWatched, onDislike }) {
-    // ================== ALTERAÇÃO 1 ==================
-    // Os estados relacionados à confirmação foram removidos, pois não são mais necessários.
-    // const [showWatchedConfirmation, setShowWatchedConfirmation] = useState(false);
-    // const [isAddingNewSuggestion, setIsAddingNewSuggestion] = useState(false);
-
     useEffect(() => {
         if (isVisible) {
             document.body.style.overflow = 'hidden';
@@ -35,24 +30,17 @@ function DetailsModal({ isVisible, onClose, details, isLoading, baseTitle, onMar
         ? `https://www.youtube.com/watch?v=${details.trailer_key}`
         : null;
 
-    // ================== ALTERAÇÃO 2 ==================
-    // A função agora executa a ação diretamente, sem abrir um pop-up de confirmação.
     const handleMarkAsWatched = () => {
-        // Chama a função principal passada pelo HomeScreen
         onMarkAsWatched(baseTitle);
         
-        // Adiciona o ID ao localStorage para não mostrá-lo novamente
         const watchedOrDislikedIds = JSON.parse(localStorage.getItem('watchedOrDislikedIds') || '[]');
         if (!watchedOrDislikedIds.includes(baseTitle.id)) {
             watchedOrDislikedIds.push(baseTitle.id);
             localStorage.setItem('watchedOrDislikedIds', JSON.stringify(watchedOrDislikedIds));
         }
         
-        // Fecha o modal
         onClose();
     };
-
-    // As funções 'handleConfirmWatched' e 'handleCancelWatched' foram removidas.
 
     const handleDislike = () => {
         onDislike(baseTitle);
@@ -69,7 +57,11 @@ function DetailsModal({ isVisible, onClose, details, isLoading, baseTitle, onMar
             className={overlayClasses}
             onClick={onClose}
         >
-            <div className="w-full max-w-[390px] bg-[#18181b] rounded-t-3xl max-h-[85%] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+            {/* ================== ALTERAÇÃO PRINCIPAL AQUI ================== */}
+            {/* Removemos o 'max-w-[390px]' e adicionamos 'mx-4'.                 */}
+            {/* Isso cria uma margem de 1rem (16px) em cada lado, garantindo  */}
+            {/* a 'folga' nas bordas de forma responsiva.                      */}
+            <div className="w-full mx-4 bg-[#18181b] rounded-t-3xl max-h-[75%] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
                 
                 <div className="flex-shrink-0 p-4 flex justify-center items-center relative border-b border-slate-700/50">
                     <button onClick={onClose} className="absolute left-4 text-slate-400 hover:text-white">&times;</button>
@@ -130,13 +122,11 @@ function DetailsModal({ isVisible, onClose, details, isLoading, baseTitle, onMar
                                 )}
                                 
                                 <div className="grid grid-cols-2 gap-3">
-                                    {/* ================== ALTERAÇÃO 3 ================== */}
-                                    {/* O texto do botão foi alterado para "Já assisti". */}
                                     <button
                                         onClick={handleMarkAsWatched}
                                         className="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded-xl transition-colors text-sm"
                                     >
-                                        Já Assisti
+                                        Já assisti
                                     </button>
                                     <button
                                         onClick={handleDislike}
@@ -149,9 +139,6 @@ function DetailsModal({ isVisible, onClose, details, isLoading, baseTitle, onMar
                         )}
                     </div>
                 </div>
-                
-                {/* ================== ALTERAÇÃO 4 ================== */}
-                {/* O JSX do modal de confirmação foi completamente removido. */}
             </div>
         </div>
     );
