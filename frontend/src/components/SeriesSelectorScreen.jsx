@@ -1,6 +1,6 @@
 // frontend/src/components/SeriesSelectorScreen.jsx
 
-import React, { useState, useEffect } from 'react'; // AQUI ESTÁ A CORREÇÃO
+import React, { useState, useEffect } from 'react';
 import SelectionCard from './SelectionCard';
 
 const MIN_SELECTIONS = 3; // A regra de negócio de no mínimo 3 seleções.
@@ -16,7 +16,10 @@ function SeriesSelectorScreen({ onSelectionComplete }) {
         const fetchInitialTitles = async () => {
             try {
                 setLoading(true);
-                const response = await fetch('http://127.0.0.1:5000/api/titles');
+                // ================== ALTERAÇÃO AQUI ==================
+                // Trocamos a URL local pela variável de ambiente.
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/titles`);
+                // ====================================================
                 if (!response.ok) {
                     throw new Error("Não foi possível carregar os títulos.");
                 }

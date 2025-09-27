@@ -6,8 +6,6 @@ import DetailsModal from './DetailsModal';
 
 const TMDB_LOGO_URL = 'https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_2-9665a76b1ae401a510ec1e0ca40ddcb3b0cfe45f1d51b77a308fea0845885648.svg';
 
-// ================== ALTERAÇÃO 1 ==================
-// Adicionamos os nomes de exibição para os novos serviços.
 const serviceNames = {
     'all': 'Todos',
     'netflix': 'Netflix',
@@ -24,9 +22,6 @@ const serviceNames = {
     'telecine': 'Telecine'
 };
 
-// ================== ALTERAÇÃO 2 ==================
-// Adicionamos os novos identificadores na ordem que queremos
-// que os botões apareçam na tela.
 const filterOrder = [
     'all', 
     'netflix', 
@@ -42,7 +37,6 @@ const filterOrder = [
     'looke',
     'telecine'
 ];
-// =============================================================
 
 
 function HomeScreen({ selectedIds, onRefine, onInitialLoadComplete }) {
@@ -81,7 +75,8 @@ function HomeScreen({ selectedIds, onRefine, onInitialLoadComplete }) {
         
         try {
             setError(null);
-            const response = await fetch('http://127.0.0.1:5000/api/suggestions', {
+            // ================== ALTERAÇÃO AQUI ==================
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/suggestions`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -121,7 +116,8 @@ function HomeScreen({ selectedIds, onRefine, onInitialLoadComplete }) {
 
     const fetchNewSuggestionsBasedOnWatched = async (watchedItem) => {
         try {
-            const response = await fetch(`http://127.0.0.1:5000/api/recommendations/${watchedItem.id}`, {
+            // ================== ALTERAÇÃO AQUI ==================
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/recommendations/${watchedItem.id}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -184,7 +180,8 @@ function HomeScreen({ selectedIds, onRefine, onInitialLoadComplete }) {
         setDetailsData(null);
         try {
             const mediaType = item.type === 'Série' ? 'tv' : 'movie';
-            const response = await fetch(`http://127.0.0.1:5000/api/details/${mediaType}/${item.id}`);
+            // ================== ALTERAÇÃO AQUI ==================
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/details/${mediaType}/${item.id}`);
             const data = await response.json();
             setDetailsData(response.ok ? data : null);
         } catch (err) {
@@ -209,7 +206,8 @@ function HomeScreen({ selectedIds, onRefine, onInitialLoadComplete }) {
     const handleDislike = async (item) => {
         setProcessedIds(prev => new Set([...prev, item.id]));
         try {
-            await fetch('http://127.0.0.1:5000/api/disliked_titles', {
+            // ================== ALTERAÇÃO AQUI ==================
+            await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/disliked_titles`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ disliked_ids: [item.id] })

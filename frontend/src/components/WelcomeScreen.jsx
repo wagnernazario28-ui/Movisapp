@@ -10,8 +10,10 @@ const WelcomeBackground = () => {
     useEffect(() => {
         const fetchBackgroundTitles = async () => {
             try {
-                // Usamos o novo endpoint que criamos no back-end
-                const response = await fetch('http://127.0.0.1:5000/api/background-titles');
+                // ================== ALTERAÇÃO AQUI ==================
+                // Trocamos a URL local pela variável de ambiente.
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/background-titles`);
+                // ====================================================
                 if (!response.ok) {
                     throw new Error("Não foi possível carregar as imagens de fundo.");
                 }
@@ -29,8 +31,6 @@ const WelcomeBackground = () => {
         fetchBackgroundTitles();
     }, []); // Array vazio garante que a busca só acontece uma vez.
 
-    // Enquanto carrega, podemos mostrar nada ou um spinner simples,
-    // mas para o fundo, é melhor não mostrar nada.
     if (loading) {
         return null;
     }
@@ -39,11 +39,6 @@ const WelcomeBackground = () => {
         <div className="welcome-bg-grid">
             {backgroundTitles.map(title => (
                 <div key={title.id} className="bg-card">
-                    {/* A MUDANÇA FUNDAMENTAL:
-                      Agora usamos uma tag <img> real, que é muito mais
-                      confiável para carregar imagens externas do que 'background-image'.
-                      Isso resolve o problema de uma vez por todas.
-                    */}
                     <img src={title.img} alt="" className="w-full h-full object-cover" />
                 </div>
             ))}
